@@ -1,0 +1,52 @@
+Diversity = 
+CALCULATE(
+	DISTINCTCOUNT('Emp_Details'[Emp_Name]),
+	'Recruitment'[FromDiversityJobFairID] IN { 1 }
+)
+
+---------------------------------
+EmpToBeTerminate = 
+CALCULATE(
+	COUNTA('Emp_Details'[Emp_Name]),
+	'Emp_Details'[PerfID] IN { 2, 1 }
+)
+-------------------------------------
+EmpTermination = 
+MAXX(
+	KEEPFILTERS(VALUES('EmpTerm'[TermReason])),
+	CALCULATE([EmpToBeTerminate])
+)
+-------------------------------
+SupNeedNOTermd = 
+CALCULATE(
+	DISTINCTCOUNT('Emp_Details'[Emp_Name]),
+	'Performance'[PerformanceReview] IN { "Exceeds", "Fully Meets" }
+)
+--------------------------------
+NeedNOTermd = 
+CALCULATE(
+	[SupNeedNOTermd],
+	'EmpTerm'[Termd] IN { 0 }
+)
+-----------------------------
+DOJ = Date.ToText([DateofHire],"MMM-YYYY")
+
+--------------------------------
+EmpTermdMonth = 
+CALCULATE(
+	COUNTA('Emp_Details'[Emp_Name]),
+	'Emp_Details'[DateofTermination].[Month] IN {
+		"January",
+		"February",
+		"March",
+		"April",
+		"May",
+		"June",
+		"July",
+		"August",
+		"September",
+		"October",
+		"November",
+		"December"
+	}
+)
